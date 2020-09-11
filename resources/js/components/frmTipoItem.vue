@@ -1,0 +1,337 @@
+<template>
+    <main class="main">
+        <!-- Breadcrumb -->
+        <ol class="breadcrumb">
+            <!--  esto no borres sino se apega el contenido cuidau -->
+        </ol>
+        <div class="container-fluid">
+            <!-- Ejemplo de tabla Listado -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> Tipo de Items
+                    <button type="button" @click="abrirModal('tipoitem','guardar')" class="btn btn-secondary" >
+                        <i class="icon-plus"></i>&nbsp;Nuevo
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <select class="form-control col-md-3" id="opcion" v-model="criterio">
+                                <option value="descripcion">Descripcion</option>
+                                </select>
+                                <input type="text" v-model="buscar"  class="form-control" placeholder="Texto a buscar">
+                                <button type="submit" @click="listarTipoItems(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Opciones</th>
+                                <th>Descripcion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="tipoitem in arrayTipoItem" :key="tipoitem.id">
+                                <td>
+                                    <button type="button" @click="abrirModal('tipoitem','actualizar',tipoitem)" class="btn btn-warning btn-sm">
+                                    <i class="icon-pencil"></i>
+                                    </button> &nbsp;
+                                    <template >
+                                       <button type="button" class="btn-danger btn-sm" @click="eliminarTipoItems(tipoitem.id)">
+                                           <i class="icon-trash"></i>
+                                       </button>
+                                    </template>
+                                </td>
+                                
+                                <td v-text="tipoitem.descripcion"></td>
+                               
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                     <nav>
+                            <ul class="pagination">
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar,criterio)">Ant</a>
+                                </li>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
+                                </li>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
+                                </li>
+                            </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- Fin ejemplo de tabla Listado -->
+        </div>
+        <!--Inicio del modal agregar/actualizar-->
+        <div class="modal fade" tabindex="-1" :class="{'mostrar': modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" v-text="tituloModal"></h4>
+                        <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="descripcion" class="form-control" placeholder="descripcion">
+                                </div>
+                            </div>
+                            <div v-show="errortipoitem" class="form-group row div - error">
+                                <div class="text-center text-error">
+                                    <div v-for="error in errorMostrarMsjtipoitem" :key="error" v-text="error" >
+    
+                                    </div>
+                                </div>   
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                        <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="guardarTipoItems()" >Guardar</button>
+                        <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarTipoItems()" >Actualizar</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!--Fin del modal-->
+        <!-- Inicio del modal Eliminar -->
+    
+        <!-- Fin del modal Eliminar -->
+
+    </main>
+</template>
+
+<script>
+    export default {
+        data () {
+            return {
+                tipoitem_id: 0,
+                descripcion: '',
+                arrayTipoItem: [],
+                modal : 0,
+                tituloModal : '',
+                tipoAccion : 0,
+                errortipoitem : 0,
+                errorMostrarMsjtipoitem :[],
+                pagination :{
+                    'total' : 0,
+                    'current_page' : 0,
+                    'per_page' : 0,
+                    'last_page' : 0,
+                    'from' : 0,
+                    'to' : 0,
+                },
+                offset : 2,
+                criterio : 'descripcion',
+                buscar : ''
+                
+            }
+        },
+        computed:{
+            isActived: function(){
+                return this.pagination.current_page;
+            },
+            //Calcula los elementos de la paginación
+            pagesNumber: function() {
+                if(!this.pagination.to) {
+                    return [];
+                }
+                
+                var from = this.pagination.current_page - this.offset; 
+                if(from < 1) {
+                    from = 1;
+                }
+
+                var to = from + (this.offset * 2); 
+                if(to >= this.pagination.last_page){
+                    to = this.pagination.last_page;
+                }  
+
+                var pagesArray = [];
+                while(from <= to) {
+                    pagesArray.push(from);
+                    from++;
+                }
+                return pagesArray;             
+
+            }
+        },
+        methods :{
+            listarTipoItems(page,buscar,criterio){
+                let me=this;
+                var url= '/tipoitem?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+                axios.get(url).then(function (response) {
+                    var respuesta= response.data;
+                    me.arrayTipoItem = respuesta.tipoitem.data;
+                    me.pagination= respuesta.pagination;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            cambiarPagina(page,buscar,criterio){
+                let me = this;
+                //Actualiza la página actual
+                me.pagination.current_page = page;
+                //Envia la petición para visualizar la data de esa página
+                me.listarTipoItems(page,buscar,criterio);
+            },
+            guardarTipoItems(){
+                if (this.validarTipoItems()){
+                    return;
+                }
+                let me = this;
+                axios.post('/tipoitem/registrar',{
+                 
+                    'descripcion' : this.descripcion
+
+                }) .then(function(response){
+                    me.cerrarModal();
+                    me.listarTipoItems(1,'','descripcion');
+
+                }).catch(function(error){
+                    console.log(error);
+
+                });
+
+            },
+            actualizarTipoItems(){
+                 if (this.validarTipoItems()){
+                    return;
+                }
+                let me = this;
+                axios.put('/tipoitem/actualizar',{
+                   
+                    'descripcion' : this.descripcion,
+                    'id': this.tipoitem_id
+
+                }) .then(function(response){
+                    me.cerrarModal();
+                    me.listarTipoItems(1,'','descripcion');
+
+                }).catch(function(error){
+                    console.log(error);
+
+                });
+            },eliminarTipoItems(id){
+                 swal({
+                title: 'Esta seguro de eliminar este Tipo de Item?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.delete('/tipoitem/eliminar_' + id,{
+                        'id': id
+                    }).then(function (response) {
+                        me.listarTipoItems(1,'','descripcion');
+                        swal(
+                        'Eliminado!',
+                        'El registro ha sido eliminado con exito.',
+                        'success'
+                        )
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                    
+                    
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+                    
+                }
+                }) 
+            },
+            validarTipoItems(){
+                this.errortipoitem=0;
+                this.errorMostrarMsjtipoitem =[];
+
+                if (!this.descripcion) this.errorMostrarMsjtipoitem.push("La descripcion del Tipo Item no puede estar vacio.");
+
+                if (this.errorMostrarMsjtipoitem.length) this.errortipoitem =1;
+
+                return this.errortipoitem;
+            },
+            cerrarModal(){
+                this.modal=0;
+                this.tituloModal='';
+                this.descripcion='';
+            },
+            abrirModal(modelo, accion, data = []){
+                switch(modelo){
+                    case "tipoitem": 
+                    {
+                        switch(accion){
+                            case 'guardar':
+                            {
+                                this.modal = 1;
+                                this.tituloModal = 'Registar TipoItem';
+                                this.descripcion = '';
+                                this.tipoAccion = 1;
+                                break;
+                            }
+                            case 'actualizar': 
+                            {
+                                //console.log(data);
+                                this.modal=1;
+                                this.tituloModal='Actualizar TipoItem';
+                                this.tipoAccion=2;
+                                this.tipoitem_id=data['id'];
+                                this.descripcion = data ['descripcion'];
+                                break;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        },
+        mounted() {
+            this.listarTipoItems(1,this.buscar,this.criterio);
+        }
+    }
+</script>
+<style>
+    .modal-content{
+        width: 100% !important;
+        position: absolute !important;
+    }
+    .mostrar{
+        display :list-item !important;
+        opacity : 1 !important;
+        position : absolute !important;
+        background-color: #3c29297a !important;
+    }
+    .div-error{
+        display: flex;
+        justify-content: center;
+    }
+    .text-error{
+        color: red !important;
+        font-weight: bold;
+    }
+
+</style>>
