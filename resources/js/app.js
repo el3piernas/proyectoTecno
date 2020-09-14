@@ -36,6 +36,6 @@ Vue.component('frmempleado-component', require('./components/frmEmpleado').defau
 const app = new Vue({
     el: '#app',
     data : {
-        menu : 0
+        menu : 2
     }
 });

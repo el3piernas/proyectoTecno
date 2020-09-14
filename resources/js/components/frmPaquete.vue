@@ -9,10 +9,11 @@
             <div class="card">
                 <div class="card-header">
                     <i class="fa fa-align-justify"></i> Paquete
-                    <button type="button" @click="abrirModal('paquete','guardar')" class="btn btn-secondary" >
+                    <button type="button" @click="abrirDatos()" class="btn btn-secondary" >
                         <i class="icon-plus"></i>&nbsp;Nuevo
                     </button>
                 </div>
+            <template v-if="listarRegistro">
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-md-6">
@@ -71,7 +72,9 @@
                     </nav>
                 </div>
                 <!-- detalle -->
-<div class="card-body">
+                </template>
+        <template v-else>
+            <div class="card-body">
             <div class="form-group row border">
               
               <div class="col-md-12">
@@ -100,7 +103,7 @@
                   :options="arrayTipoPaquete"
                     label="nombre"
                     placeholder="Tipo Paquete..."
-                    
+                    :uid="1"
                   />
                 </div>
               </div>
@@ -146,8 +149,8 @@
                   <th>SubTotal</th>
                 </tr>
               </thead>
-              <tbody v-if="(arrayDetalle.length)">
-                <tr v-for="detalle in arrayDetalle" :key="detalle.id">
+              <tbody v-if="(data.detalle.length)">
+                <tr v-for="detalle in data.detalle" :key="detalle.id">
                   <td>
                     <button
                       @click="eliminarDetalle(index)"
@@ -197,7 +200,7 @@
             </table>
             <div class="form-group row">
               <div class="col-md-12">
-                <button type="button" class="btn btn-secondary" @click="ocultarDetalle()">Cerrar</button>
+                <button type="button" class="btn btn-secondary" @click="abrirDatos()">Cerrar</button>
                 <button
                   type="button"
                   v-if="tipoAccion==1"
@@ -213,6 +216,7 @@
               </div>
             </div>
           </div>
+          </template>
                 <!-- Fin de Detalle -->
             </div>
             <!-- Fin ejemplo de tabla Listado -->
@@ -286,15 +290,15 @@ import 'vue-select/dist/vue-select.css';
     export default {
         data () {
             return {
-                paquete_id: 0,
+
                 data:{
                 id:0,
                 idTipoPaquete: 0,
                 acontecimiento:'',
                 precio:0,
+                detalle:[]
                 },
                 cantidad:0,
-                arrayDetalle:[],
                 arrayPaquete: [],
                 arrayTipoPaquete: [],
                 modal : 0,
@@ -312,8 +316,8 @@ import 'vue-select/dist/vue-select.css';
                 },
                 offset : 2,
                 criterio : 'acontecimiento',
-                buscar : ''
-                
+                buscar : '',
+                listarRegistro:true,                
             }
         },
         computed:{
@@ -358,13 +362,13 @@ import 'vue-select/dist/vue-select.css';
                     console.log(error);
                 });
             },
-            selectTipoPaquete(){
+            listarTipoPaquete(){
                 let me=this;
                 var url= '/tipopaquete/selectTipoPaquete';
                 axios.get(url).then(function (response) {
                     //console.log(response);
                     var respuesta= response.data;
-                    me.arrayTipoPaquete = respuesta.tipopaquete;
+                    me.arrayTipoPaquete = respuesta.data;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -396,6 +400,24 @@ import 'vue-select/dist/vue-select.css';
 
                 });
 
+            },
+            limpiar(){
+            this.data={
+                        id:0,
+                        idTipoPaquete: 0,
+                        acontecimiento:'',
+                        precio:0,
+                        detalle:[]
+                        };
+            this.arrayTipoPaquete=[];
+            },
+            abrirDatos(id){
+                this.limpiar();
+                this.listarRegistro=this.listarRegistro==true?false:true;
+                this.listarTipoPaquete();
+                if(id>0){
+                
+                }
             },
             actualizarPaquete(){
                  if (this.validarPaquete()){
@@ -439,7 +461,7 @@ import 'vue-select/dist/vue-select.css';
                         me.listarPaquete(1,'','acontecimiento');
                         swal(
                         'Eliminado!',
-                        'El registro ha sido eliminado con exito.',
+                        'El  ha sido eliminado con exito.',
                         'success'
                         )
                     }).catch(function (error) {
@@ -466,6 +488,7 @@ import 'vue-select/dist/vue-select.css';
                 return this.errorpaquete;
             },
             cerrarModal(){
+                this.listarRegistro=false;
                 this.modal=0;
                 this.tituloModal='';
                 this.acontecimiento='';

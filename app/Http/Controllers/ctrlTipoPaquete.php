@@ -44,11 +44,10 @@ class ctrlTipoPaquete extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function selectTipoPaquete(Request $request){
+    public function selectTipoPaquete(){
         //if (!$request->ajax()) return redirect('/');
-        $tipopaquete = tipopaquete::where('id','>=','1')
-        ->select('id','nombre')->orderBy('nombre', 'asc')->get();
-        return ['tipopaquete' => $tipopaquete];
+        $tipopaquete = tipopaquete::select("id","nombre")->get();
+        return ['data' => $tipopaquete];
     }
 
     public function guardar(Request $request)
