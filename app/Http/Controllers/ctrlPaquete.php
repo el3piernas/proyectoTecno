@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\paquete;
+use App\paqueteitem;
+use DB;
 
 class ctrlPaquete extends Controller
 {
@@ -51,12 +53,30 @@ class ctrlPaquete extends Controller
      */
     public function guardar(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
+        DB::beginTransaction();
+        try{     
         $paquete = new paquete();
         $paquete->idTipoPaquete = $request->idTipoPaquete;
         $paquete->acontecimiento = $request->acontecimiento;
         $paquete->precio = $request->precio;
         $paquete->save();
+        $detalles = $request->detalle;
+        foreach($detalles as $det)
+        {
+            $detalle = new paqueteitem();
+            $detalle->idPaquete=$paquete->id;
+            $detalle->idItem=$det['idItem'];
+            $detalle->cantidad=$det['cantidad'];
+            $detalle->precio=$det['precio'];
+            $detalle->save();
+        }
+        DB::commit();
+        }
+        catch(Exception $ex)
+        {
+            DB::rollBack();
+        }
     }
     public function actualizar(Request $request)
     {

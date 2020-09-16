@@ -44,7 +44,7 @@ class ctrlTipoPaquete extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function selectTipoPaquete(){
+    public function todos(){
         //if (!$request->ajax()) return redirect('/');
         $tipopaquete = tipopaquete::select("id","nombre")->get();
         return ['data' => $tipopaquete];

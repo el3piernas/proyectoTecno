@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "sweetalert2": "^10.0.2",
         "vue-select": "^3.10.8"
     }
 }

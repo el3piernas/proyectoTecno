@@ -18,7 +18,7 @@ class CreatePaqueteitemTable extends Migration
             $table->foreignId('idPaquete');
             $table->foreignId('idItem');
             $table->integer('cantidad');
-            $table->float('precio',8,2);
+            $table->decimal('precio',20,2);
             
             $table->foreign('idPaquete')->references('id')->on('paquete')->ondelete('cascade');
             $table->foreign('idItem')->references('id')->on('item');

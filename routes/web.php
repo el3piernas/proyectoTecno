@@ -26,12 +26,15 @@ Route::post('/tipoitem/registrar', 'ctrlTipoItem@guardar');
 Route::put('/tipoitem/actualizar', 'ctrlTipoItem@actualizar');
 Route::delete('/tipoitem/eliminar_{id}', 'ctrlTipoItem@eliminar');
 
+//Item
+Route::get('/item/todos', 'ctrlItem@todos');
+
 /*ruta de tipopaquete*/
 Route::get('/tipopaquete', 'ctrlTipoPaquete@index');
 Route::post('/tipopaquete/guardar', 'ctrlTipoPaquete@guardar');
 Route::put('/tipopaquete/actualizar', 'ctrlTipoPaquete@actualizar');
 Route::delete('/tipopaquete/eliminar_{id}', 'ctrlTipoPaquete@eliminar');
-Route::get('/tipopaquete/selectTipoPaquete', 'ctrlTipoPaquete@selectTipoPaquete');
+Route::get('/tipopaquete/todos', 'ctrlTipoPaquete@todos');
 
 
 /*ruta de salon*/
