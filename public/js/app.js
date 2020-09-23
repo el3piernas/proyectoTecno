@@ -4114,10 +4114,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       salon_id: 0,
+      foto: '',
       nombre: '',
       descripcion: '',
       ubicacion: '',
@@ -4199,6 +4208,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var me = this;
       axios.post('/salon/guardar', {
+        'foto': this.foto,
         'nombre': this.nombre,
         'descripcion': this.descripcion,
         'ubicacion': this.ubicacion,
@@ -4217,6 +4227,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var me = this;
       axios.put('/salon/actualizar', {
+        'foto': this.foto,
         'nombre': this.nombre,
         'descripcion': this.descripcion,
         'ubicacion': this.ubicacion,
@@ -4269,6 +4280,7 @@ __webpack_require__.r(__webpack_exports__);
     cerrarModal: function cerrarModal() {
       this.modal = 0;
       this.tituloModal = '';
+      this.foto = '';
       this.nombre = '';
       this.descripcion = '';
       this.ubicacion = '';
@@ -4285,6 +4297,7 @@ __webpack_require__.r(__webpack_exports__);
                 {
                   this.modal = 1;
                   this.tituloModal = 'Registar Salon';
+                  this.foto = '';
                   this.nombre = '';
                   this.descripcion = '';
                   this.ubicacion = '';
@@ -4300,6 +4313,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.tituloModal = 'Actualizar Salon';
                   this.tipoAccion = 2;
                   this.salon_id = data['id'];
+                  this.foto = data['foto'];
                   this.nombre = data['nombre'];
                   this.descripcion = data['descripcion'];
                   this.ubicacion = data['ubicacion'];
@@ -48468,6 +48482,8 @@ var render = function() {
                       2
                     ),
                     _vm._v(" "),
+                    _c("td", { domProps: { textContent: _vm._s(salon.foto) } }),
+                    _vm._v(" "),
                     _c("td", {
                       domProps: { textContent: _vm._s(salon.nombre) }
                     }),
@@ -48635,6 +48651,41 @@ var render = function() {
                     }
                   },
                   [
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "email-input" }
+                        },
+                        [_vm._v("Foto")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.foto,
+                              expression: "foto"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", placeholder: "foto" },
+                          domProps: { value: _vm.foto },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.foto = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
                       _c(
                         "label",
@@ -48868,6 +48919,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("Opciones")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Foto")]),
         _vm._v(" "),
         _c("th", [_vm._v("Nombre")]),
         _vm._v(" "),
@@ -62848,7 +62901,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\tecno\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\Proyecto\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

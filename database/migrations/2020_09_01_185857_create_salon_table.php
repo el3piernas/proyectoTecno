@@ -15,6 +15,7 @@ class CreateSalonTable extends Migration
     {
         Schema::create('salon', function (Blueprint $table) {
             $table->id();
+            $table->string('foto',50);
             $table->string('nombre',50);
             $table->string('descripcion',255);
             $table->string('ubicacion',255);

@@ -30,6 +30,7 @@
                         <thead>
                             <tr>
                                 <th>Opciones</th>
+                                <th>Foto</th>
                                 <th>Nombre</th>
                                 <th>Descripcion</th>
                                 <th>Ubicacion</th>
@@ -48,6 +49,7 @@
                                        </button>
                                     </template>
                                 </td>
+                                <td v-text="salon.foto"></td>
                                 <td v-text="salon.nombre"></td>
                                 <td v-text="salon.descripcion"></td>
                                 <td v-text="salon.ubicacion"></td>
@@ -87,6 +89,12 @@
                     </div>
                     <div class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="email-input">Foto</label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="foto" class="form-control" placeholder="foto">
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label" for="email-input">Nombre</label>
                                 <div class="col-md-9">
@@ -143,6 +151,7 @@
         data () {
             return {
                 salon_id: 0,
+                foto:'',
                 nombre:'',
                 descripcion: '',
                 ubicacion: '',
@@ -222,6 +231,7 @@
                 }
                 let me = this;
                 axios.post('/salon/guardar',{
+                    'foto' : this.foto,
                     'nombre' : this.nombre,
                     'descripcion' : this.descripcion,
                     'ubicacion' : this.ubicacion,
@@ -243,6 +253,7 @@
                 }
                 let me = this;
                 axios.put('/salon/actualizar',{
+                    'foto' : this.foto,
                     'nombre' : this.nombre,
                     'descripcion' : this.descripcion,
                     'ubicacion' : this.ubicacion,
@@ -309,6 +320,7 @@
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
+                this.foto='';
                 this.nombre='';
                 this.descripcion='';
                 this.ubicacion='';
@@ -323,6 +335,7 @@
                             {
                                 this.modal = 1;
                                 this.tituloModal = 'Registar Salon';
+                                this.foto = '';
                                 this.nombre = '';
                                 this.descripcion = '';
                                 this.ubicacion='';
@@ -337,6 +350,7 @@
                                 this.tituloModal='Actualizar Salon';
                                 this.tipoAccion=2;
                                 this.salon_id=data['id'];
+                                this.foto = data ['foto'];
                                 this.nombre = data ['nombre'];
                                 this.descripcion = data ['descripcion'];
                                 this.ubicacion = data ['ubicacion'];

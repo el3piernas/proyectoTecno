@@ -47,6 +47,7 @@ class ctrlSalon extends Controller
     public function guardar(Request $request)
     {
         $salon= new salon;
+        $salon->foto=$request->foto;
         $salon->nombre=$request->nombre;
         $salon->descripcion=$request->descripcion;
         $salon->ubicacion=$request->ubicacion;
@@ -57,6 +58,7 @@ class ctrlSalon extends Controller
     public function actualizar(Request $request)
     {
         $salon= salon::findOrFail($request->id);
+        $salon->foto=$request->foto;
         $salon->nombre=$request->nombre;
         $salon->descripcion=$request->descripcion;
         $salon->ubicacion=$request->ubicacion;

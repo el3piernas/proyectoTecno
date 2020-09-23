@@ -8,6 +8,7 @@ class salon extends Model
 {
     protected $table = "salon";
     protected $fillables = [
+        'foto',
         'nombre',
         'descripcion',
         'ubicacion',

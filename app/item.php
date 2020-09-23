@@ -11,7 +11,9 @@ class item extends Model
         'idTipoItem',
         'foto',
         'nombre',
-        'descripcion'
+        'descripcion',
+        'precio',
+        'stock'
        
     ];
     public $timestamps=false;

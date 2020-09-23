@@ -19,6 +19,8 @@ class CreateItemTable extends Migration
             $table->string('foto',50);
             $table->string('nombre',50);
             $table->string('descripcion',50);
+            $table->float('precio',8,2); 
+            $table->integer('stock');
             $table->foreign('idTipoItem')->references('id')->on('tipoitem');
         });
     }

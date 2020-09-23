@@ -27,6 +27,11 @@ Route::put('/tipoitem/actualizar', 'ctrlTipoItem@actualizar');
 Route::delete('/tipoitem/eliminar_{id}', 'ctrlTipoItem@eliminar');
 
 //Item
+Route::get('/item', 'ctrlItem@idex');
+Route::post('/item/registrar', 'ctrlItem@guardar');
+Route::put('/item/actualizar', 'ctrlItem@actualizar');
+Route::delete('/item/eliminar_{id}', 'ctrlItem@eliminar');
+
 Route::get('/item/todos', 'ctrlItem@todos');
 
 /*ruta de tipopaquete*/
