@@ -4,7 +4,7 @@
         <h1>reservas</h1>
     </template>  
     <template v-if="menu==1">
-        <h1>nota de servicio</h1>
+       <frmnotaservicio-component></frmnotaservicio-component>
     </template>
     <template v-if="menu==2">
         <frmpaquete-component></frmpaquete-component>
@@ -32,7 +32,7 @@
         <frmcliente-component></frmcliente-component>
     </template> 
     <template v-if="menu==10">
-        <h1>nota de servicio</h1>
+        <frmreserva-component></frmreserva-component>
     </template>       
 
 @endsection

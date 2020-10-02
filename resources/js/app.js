@@ -27,6 +27,11 @@ Vue.component('frmbitacora-component', require('./components/frmBitacora').defau
 Vue.component('frmpaquete-component', require('./components/frmPaquete').default);
 Vue.component('frmcliente-component', require('./components/frmCliente').default);
 Vue.component('frmempleado-component', require('./components/frmEmpleado').default);
+Vue.component('frmitem-component', require('./components/frmItem').default);
+Vue.component('FrmNewItem-component', require('./components/FrmNewItem').default);
+Vue.component('frmnotaservicio-component', require('./components/FrmNotaServicio').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -36,6 +41,6 @@ Vue.component('frmempleado-component', require('./components/frmEmpleado').defau
 const app = new Vue({
     el: '#app',
     data : {
-        menu : 2
+        menu : 1
     }
 });

@@ -70,5 +70,10 @@ class ctrlSalon extends Controller
         $salon=salon::find($id);
         $salon->delete();
     }
+    public function todos(){
+        //if (!$request->ajax()) return redirect('/');
+        $salon = salon::select("id","nombre")->get();
+        return ['data' => $salon];
+    }
     
 }

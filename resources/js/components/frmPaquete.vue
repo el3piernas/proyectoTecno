@@ -41,8 +41,9 @@
               <thead>
                 <tr>
                   <th>Opciones</th>
-                  <th>Nombre del Paquete</th>
                   <th>Acontecimiento</th>
+                  <th>Nombre del Paquete</th>
+                  
                   <th>Precio</th>
                 </tr>
               </thead>
@@ -51,10 +52,10 @@
                   <td>
                     <button
                       type="button"
-                      @click="abrirModal('paquete','actualizar',paquete)"
-                      class="btn btn-warning btn-sm"
+                      @click="abrirDatos(paquete.id)"
+                      class="btn btn-info btn-sm"
                     >
-                      <i class="icon-pencil"></i>
+                      <i class="icon-info"></i>
                     </button> &nbsp;
                     <template>
                       <button
@@ -66,8 +67,9 @@
                       </button>
                     </template>
                   </td>
-                  <td v-text="paquete.nombre"></td>
                   <td v-text="paquete.acontecimiento"></td>
+                  <td v-text="paquete.nombre"></td>
+                  
                   <td v-text="paquete.precio"></td>
                 </tr>
               </tbody>
@@ -124,16 +126,21 @@
                   />
                 </div>
               </div>
+              
               <div class="col-md-6">
                 <div class="form-group">
                   <label>Tipo Paquete</label>
-                  <v-select
+                  <!-- <v-select
                     :options="arrayTipoPaquete"
                     label="nombre"
                     placeholder="Tipo Paquete"
                     :selectedValue="selectedTipo"
                     :getOptionKey="seleccionadoTipo"
-                  />
+                  /> -->
+                   <select class="form-control" v-model="data.idTipoPaquete">
+                      <option value="0" disabled>Seleccione</option>
+                      <option v-for="tipo in arrayTipoPaquete" :key="tipo.id" :value="tipo.id" >{{ tipo.nombre }}</option>
+                    </select>  
                 </div>
               </div>
             </div>
@@ -149,28 +156,8 @@
                     :getOptionKey="seleccionadoItem"
                   />
                 </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <label for></label>
-                  <button
-                    @click="abrirModal()"
-                    data-toggle="modal"
-                    data-target="#ModalLong"
-                    class="btn btn-success form-control btnagregar"
-                  >
-                    <i class="icon-plus"></i>
-                    <i class="icon-plus"></i>
-                    <i class="icon-plus"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <label for>Cantidad</label>
-                  <input type="number" value="0" min="0" class="form-control" v-model="cantidad" />
-                </div>
-              </div>
+              </div>           
+             
               <div class="col-md-2">
                 <div class="form-group">
                   <label for></label>
@@ -203,13 +190,13 @@
                     </button>
                   </td>
                   <td>{{ detalle.idItem }}</td>
-                  <td>{{ detalle.item.nombre }}</td>
+                  <td>{{ detalle.nombre }}</td>
                   <td>
                     <input
                       type="number"
                       step="0"
                       min="0"
-                      v-model="detalle.precio"
+                      v-model="detalle.cantidad"
                       class="form-control"
                     />
                   </td>
@@ -217,8 +204,9 @@
                     <input
                       type="number"
                       step="0"
+                      readonly
                       min="0"
-                      v-model="detalle.cantidad"
+                      v-model="detalle.precio"
                       class="form-control"
                     />
                   </td>
@@ -247,12 +235,12 @@
                   class="btn btn-primary"
                   @click="guardar()"
                 >Guardar</button>
-                <button
+                <!-- <button
                   type="button"
                   v-if="tipoAccion==2"
                   class="btn btn-primary"
                   @click="actualizar()"
-                >Actualizar</button>
+                >Actualizar</button> -->
               </div>
             </div>
           </div>
@@ -261,76 +249,6 @@
       </div>
       <!-- Fin ejemplo de tabla Listado -->
     </div>
-    <!--Inicio del modal agregar/actualizar-->
-    <div
-      class="modal fade"
-      tabindex="-1"
-      :class="{'mostrar': modal}"
-      role="dialog"
-      aria-labelledby="myModalLabel"
-      style="display: none;"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-primary modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" v-text="tituloModal"></h4>
-            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form action method="post" enctype="multipart/form-data" class="form-horizontal">
-              <!-- <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Nombre</label>
-                                <div class="col-md-9">
-                                    <select class="form-control" v-model="tipopaquete_id">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="tipopaquete in arrayTipoPaquete" :key="tipopaquete.id" :value="tipopaquete.id" v-text="tipopaquete.nombre"></option>
-                                        </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Acontecimiento</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="acontecimiento" class="form-control" placeholder="acontecimiento">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Precio</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="precio" class="form-control" placeholder="precio">
-                                </div>
-              </div>-->
-              <div v-show="errorpaquete" class="form-group row div - error">
-                <div class="text-center text-error">
-                  <div v-for="error in errorMostrarMsjpaquete" :key="error" v-text="error"></div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-            <button
-              type="button"
-              v-if="tipoAccion==1"
-              class="btn btn-primary"
-              @click="guardarPaquete()"
-            >Guardar</button>
-            <button
-              type="button"
-              v-if="tipoAccion==2"
-              class="btn btn-primary"
-              @click="actualizarPaquete()"
-            >Actualizar</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!--Fin del modal-->
-    <!-- Inicio del modal Eliminar -->
 
     <!-- Fin del modal Eliminar -->
   </main>
@@ -361,8 +279,8 @@ export default {
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
-      errorpaquete: 0,
-      errorMostrarMsjpaquete: [],
+      errorpaquete: false,
+      error: "",
       pagination: {
         total: 0,
         current_page: 0,
@@ -439,6 +357,19 @@ export default {
           console.log(error);
         });
     },
+    mostrar(id) {
+      let me = this;
+      var url =
+        "/paquete/get_"+id;
+      axios
+        .get(url)
+        .then(res=> {
+         me.data=res.data;          
+        })
+        .catch(function (error) {
+          console.log(error);
+        });        
+    },
     seleccionadoItem(e) {
       this.selectedItem = e;
     },
@@ -485,13 +416,20 @@ export default {
       //   if (this.validarPaquete()) {
       //     return;
       //   }
-      let me = this;
+            let me = this;
+      me.validarPaquete();
+      if(me.errorpaquete){
+me.eventoAlerta("error", me.error);
+return;
+      }
+
       axios
         .post("/paquete/guardar", me.data)
         .then((res) => {
           me.eventoAlerta("success", "Guardado Exitosamente");
           me.cerrarModal();
           me.listarPaquete(1, "", "acontecimiento");
+          me.listarRegistro = me.listarRegistro == true ? false : true;
         })
         .catch((error) => {
           console.log(error);
@@ -520,9 +458,9 @@ export default {
         this.data.detalle.push({
           id: 0,
           idItem: this.selectedItem.id,
-          item: this.selectedItem,
+          nombre: this.selectedItem.nombre,
           cantidad: 0,
-          precio: 0,
+          precio: this.selectedItem.precio,
           subTotal: 0,
         });
       }
@@ -536,27 +474,9 @@ export default {
       this.listarItem();
       this.listarTipoPaquete();
       if (id > 0) {
+        this.mostrar(id);
+        this.tipoAccion=3;
       }
-    },
-    actualizarPaquete() {
-      if (this.validarPaquete()) {
-        return;
-      }
-      let me = this;
-      axios
-        .put("/paquete/actualizar", {
-          idTipoPaquete: this.tipopaquete_id,
-          acontecimiento: this.acontecimiento,
-          precio: this.precio,
-          id: this.paquete_id,
-        })
-        .then(function (response) {
-          me.cerrarModal();
-          me.listarPaquete(1, "", "acontecimiento");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
     },
     eliminarPaquete(id) {
       swal({
@@ -603,17 +523,27 @@ export default {
       });
     },
     validarPaquete() {
-      this.errorpaquete = 0;
-      this.errorMostrarMsjpaquete = [];
-
-      if (!this.acontecimiento)
-        this.errorMostrarMsjpaquete.push(
-          "el acontecimiento del Paquete no puede estar vacio."
-        );
-
-      if (this.errorMostrarMsjpaquete.length) this.errorpaquete = 1;
-
-      return this.errorpaquete;
+      this.errorpaquete = false;
+      if (!this.data.acontecimiento)
+      {
+        this.error='inserte el acontecimiento';
+          this.errorpaquete=true;
+          return;
+      }
+      if(this.data.idTipoPaquete<1)
+      {
+this.error='seleccione el tipo';
+          this.errorpaquete=true;
+          return;
+      
+      }  
+      if(this.data.detalle.length<1)
+      {
+this.error='agregue item para el paquete';
+          this.errorpaquete=true;
+          return;
+      
+      }  
     },
     cerrarModal() {
       this.listarRegistro = false;
@@ -624,35 +554,7 @@ export default {
       this.tipopaquete_id = 0;
       this.errorpaquete = 0;
     },
-    abrirModal(modelo, accion, data = []) {
-      switch (modelo) {
-        case "paquete": {
-          switch (accion) {
-            case "guardar": {
-              this.modal = 1;
-              this.tituloModal = "Registar Paquete";
-              this.tipopaquete_id = 0;
-              this.acontecimiento = "";
-              this.precio = "";
-              this.tipoAccion = 1;
-              break;
-            }
-            case "actualizar": {
-              //console.log(data);
-              this.modal = 1;
-              this.tituloModal = "Actualizar Paquete";
-              this.tipoAccion = 2;
-              this.paquete_id = data["id"];
-              this.tipopaquete_id = data["idTipoPaquete"];
-              this.acontecimiento = data["acontecimiento"];
-              this.precio = data["precio"];
-              break;
-            }
-          }
-        }
-      }
-      // this.selectTipoPaquete();
-    },
+
   },
   mounted() {
     this.listarPaquete(1, this.buscar, this.criterio);

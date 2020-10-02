@@ -43,7 +43,35 @@ class ctrlPaquete extends Controller
         ];
     }
 
-   
+   public function getBy($id){
+       $tabla=paquete::findOrFail($id);
+
+       $tabla['detalle']=paqueteitem::join('item','paqueteitem.idItem','item.id')
+        ->select('paqueteitem.id','paqueteitem.idItem','item.nombre','paqueteitem.cantidad'
+        ,'paqueteitem.precio')
+        ->where('paqueteitem.idPaquete','=',$id)
+        ->get();
+
+        return $tabla;
+   }
+
+   public function todos(){
+    //if (!$request->ajax()) return redirect('/');
+    $lista = paquete::select('id','acontecimiento')
+    ->get();
+    return $lista;
+    }
+   public function getByDetalle($id){
+    
+    $tabla=paqueteitem::join('item','paqueteitem.idItem','item.id')
+     ->select('paqueteitem.id','paqueteitem.idItem','item.nombre',
+     'paqueteitem.cantidad','paqueteitem.precio'
+     ,DB::raw('paqueteitem.cantidad*paqueteitem.precio as subTotal'))
+     ->where('paqueteitem.idPaquete','=',$id)
+     ->get();
+
+     return $tabla;
+    }
 
     /**
      * Store a newly created resource in storage.

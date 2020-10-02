@@ -71,5 +71,10 @@ class ctrlCliente extends Controller
         $cliente=cliente::find($id);
         $cliente->delete();
     }
+    public function todos(){
+        //if (!$request->ajax()) return redirect('/');
+        $cliente = cliente::select("id","nombre")->get();
+        return ['data' => $cliente];
+    }
     
 }

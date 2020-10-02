@@ -61,6 +61,13 @@ class ctrlTipoItem extends Controller
         $tipoitem->delete();
     }
 
+    public function selectTipoItem(Request $request){
+        if (!$request->ajax()) return redirect('/');
+        $tipoitem = tipoitem::where('id','>=','1')
+        ->select('id','descripcion')->orderBy('descripcion', 'asc')->get();
+        return ['tipoitem' => $tipoitem];
+    }
+
 
  
 }

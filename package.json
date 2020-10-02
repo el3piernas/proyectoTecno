@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "moment": "^2.29.0",
         "sweetalert2": "^10.0.2",
         "vue-select": "^3.10.8"
     }

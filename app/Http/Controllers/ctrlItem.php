@@ -15,13 +15,13 @@ class ctrlItem extends Controller
         $criterio = $request->criterio;
         if ($buscar==''){
             $item = item::join('tipoitem','item.idTipoItem','=', 'tipoitem.id')
-            ->select('item.id','item.idItem','tipoitem.descripcion','item.foto','item.nombre','item.descripcion','item.precio','item.stock')
-            ->orderBy('item.id','desc')->paginate(3);
+            ->select('item.id','item.idTipoItem','tipoitem.descripcion as descripTpitem','item.foto','item.nombre','item.descripcion','item.precio','item.stock')
+            ->orderBy('item.id','desc')->paginate(10);
         }
-        else{$item = item::join('tipoitem','item.idItem','=', 'tipoitem.id')
-            ->select('item.id','item.idItem','tipoitem.descripcion','item.foto','item.nombre','item.descripcion','item.precio','item.stock')
+        else{$item = item::join('tipoitem','item.idTipoItem','=', 'tipoitem.id')
+            ->select('item.id','item.idTipoItem','tipoitem.descripcion','item.foto','item.nombre','item.descripcion','item.precio','item.stock')
             ->where('item.'.$criterio, 'like', '%'. $buscar . '%' ) 
-            ->orderBy('item.id','desc')->paginate(3);
+            ->orderBy('item.id','desc')->paginate(10);
         }
         return [
             'pagination' => [
@@ -38,7 +38,7 @@ class ctrlItem extends Controller
 
     public function todos(){
         //if (!$request->ajax()) return redirect('/');
-        $lista = item::select("id","nombre")->get();
+        $lista = item::select("id","nombre","precio")->get();
         return ['data' => $lista];
     }
          /**

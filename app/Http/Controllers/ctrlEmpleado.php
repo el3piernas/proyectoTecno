@@ -76,4 +76,10 @@ class ctrlEmpleado extends Controller
         ->select('id','nombre')->orderBy('nombre', 'asc')->get();
         return ['empleado' => $empleado];
     }
+
+    public function todos(){
+        //if (!$request->ajax()) return redirect('/');
+        $empleado = empleado::select("id","nombre")->get();
+        return ['data' => $empleado];
+    }
 }
